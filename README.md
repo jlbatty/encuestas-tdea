@@ -4,6 +4,39 @@ This project was generated using [Angular CLI](https://github.com/angular/angula
 
 Frontend en **Angular** + backend en **Firebase Functions** (Firestore como base de datos).
 
+## Requisitos previos
+
+- **Node.js 20** (lo exige `functions/package.json`).
+- **npm** (incluido con Node).
+- **Firebase CLI** instalado globalmente (para emuladores y despliegue):
+
+  ```bash
+  npm install -g firebase-tools
+  firebase login
+  ```
+
+- Acceso al proyecto Firebase **encuestatdea-baeff**. Si no eres el propietario, pide que te inviten en Firebase Console → Configuración del proyecto → **Usuarios y permisos**.
+
+## Instalación (clonar en otro equipo)
+
+1. Clona el repositorio:
+
+   ```bash
+   git clone https://github.com/jlbatty/encuestas-tdea.git
+   cd encuestas-tdea
+   ```
+
+2. Instala las dependencias del **frontend** (Angular) y del **backend** (Functions):
+
+   ```bash
+   npm install
+   cd functions
+   npm install
+   cd ..
+   ```
+
+3. Configura la clave de credenciales de Firebase (ver la sección siguiente).
+
 ## Configuración inicial (credenciales de Firebase)
 
 > ⚠️ **La clave de cuenta de servicio del Admin SDK NO se incluye en el repositorio** por seguridad (está ignorada en `.gitignore` mediante la regla `*-adminsdk-*.json`). Esa clave da acceso administrativo total al proyecto Firebase, por lo que cada desarrollador debe generar la suya.
@@ -29,6 +62,23 @@ Algunos scripts de backend (`functions/src/seed.ts` y `functions/src/seed-admin.
    Si la ruta aparece en la salida, está correctamente ignorada y **nunca** se subirá al repositorio.
 
 En producción (Firebase Functions desplegadas) **no hace falta este archivo**: las credenciales las inyecta Firebase automáticamente.
+
+## Ejecutar el proyecto en local
+
+Necesitas **dos terminales**: una para el backend (emulador de Functions) y otra para el frontend.
+
+```bash
+# Terminal 1 — backend (emulador de Firebase Functions)
+cd functions
+npm run serve
+
+# Terminal 2 — frontend Angular
+npm start
+```
+
+El frontend queda disponible en `http://localhost:4200/` y consume la API del emulador definida en `src/environments/environment.ts` (`apiUrl`).
+
+> El frontend **no requiere credenciales secretas**; su único ajuste es `apiUrl` en `src/environments/environment.ts`.
 
 ## Development server
 
