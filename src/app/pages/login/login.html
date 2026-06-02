@@ -1,0 +1,58 @@
+<div class="login-page">
+  <div class="login-card">
+    <div class="login-header">
+      <div class="logo">
+        <span class="logo-icon">🎓</span>
+        <div>
+          <h1>TdeA Encuestas</h1>
+          <p>Panel Administrativo</p>
+        </div>
+      </div>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" #loginForm="ngForm" class="login-form">
+      <div class="form-group">
+        <label for="email">Correo institucional</label>
+        <input
+          id="email"
+          type="email"
+          [(ngModel)]="email"
+          name="email"
+          placeholder="correo@tdea.edu.co"
+          required
+          autocomplete="username"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Contraseña</label>
+        <input
+          id="password"
+          type="password"
+          [(ngModel)]="password"
+          name="password"
+          placeholder="••••••••"
+          required
+          autocomplete="current-password"
+        />
+      </div>
+
+      @if (error()) {
+        <div class="error-alert">{{ error() }}</div>
+      }
+
+      <button type="submit" class="btn-primary" [disabled]="loading() || !email || !password">
+        @if (loading()) {
+          <span class="spinner"></span> Ingresando...
+        } @else {
+          Ingresar
+        }
+      </button>
+    </form>
+
+    <div class="login-footer">
+      <button class="btn-link" (click)="goToSurvey()">← Ir a la encuesta pública</button>
+      <p class="hint">Usa el correo y contraseña configurados en Firestore.</p>
+    </div>
+  </div>
+</div>

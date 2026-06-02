@@ -1,0 +1,148 @@
+<div class="survey-page">
+  <header class="survey-header">
+    <div class="header-inner">
+      <span class="logo-text">🎓 TdeA Encuestas</span>
+      <div class="header-actions">
+        <button class="btn-admin" (click)="goToLogin()">Panel admin →</button>
+      </div>
+    </div>
+  </header>
+
+  @if (loading()) {
+    <div class="survey-unavailable">
+      <div class="loading-spinner"></div>
+      <p>Cargando encuesta...</p>
+    </div>
+  } @else if (error() && !submitted()) {
+    <div class="survey-unavailable">
+      <h2>⚠️ {{ error() }}</h2>
+    </div>
+  } @else if (submitted()) {
+    <div class="survey-success">
+      <div class="success-card">
+        <div class="success-icon">✅</div>
+        <h2>¡Gracias por tu participación!</h2>
+        <p>Tu respuesta ha sido registrada de forma anónima y será de gran ayuda para esta investigación.</p>
+        <button class="btn-primary" (click)="restartSurvey()">Responder de nuevo</button>
+      </div>
+    </div>
+  } @else {
+    <div class="survey-container">
+      <div class="survey-card">
+        <div class="survey-meta">
+          <h2>{{ survey()!.title }}</h2>
+          @if (currentStep() === 0) {
+            <p class="survey-desc">{{ survey()!.description }}</p>
+          }
+        </div>
+
+        <div class="progress-bar-wrap">
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="progress()"></div>
+          </div>
+          <span class="progress-label">Pregunta {{ currentStep() + 1 }} de {{ totalSteps() }}</span>
+        </div>
+
+        @let q = currentQuestion();
+        @if (q) {
+          @if (isNewSection()) {
+            <div class="section-header">
+              @for (line of sectionLines(); track $index) {
+                <p>{{ line }}</p>
+              }
+            </div>
+          }
+
+          <div class="question-block">
+            <p class="question-text">
+              {{ currentStep() + 1 }}. {{ q.text }}
+              @if (q.required) { <span class="required">*</span> }
+            </p>
+
+            @if (q.type === 'single') {
+              <div class="options-list">
+                @for (opt of q.options; track opt.id) {
+                  <label class="option-item" [class.selected]="getAnswer(q.id) === opt.id">
+                    <input
+                      type="radio"
+                      [name]="q.id"
+                      [value]="opt.id"
+                      [checked]="getAnswer(q.id) === opt.id"
+                      (change)="setAnswer(q.id, opt.id)"
+                    />
+                    <span class="option-text">{{ opt.text }}</span>
+                  </label>
+                }
+              </div>
+            }
+
+            @if (q.type === 'multiple') {
+              <p class="hint-text">Puedes seleccionar más de una opción.</p>
+              <div class="options-list">
+                @for (opt of q.options; track opt.id) {
+                  <label class="option-item" [class.selected]="isMultipleSelected(q.id, opt.id)">
+                    <input
+                      type="checkbox"
+                      [checked]="isMultipleSelected(q.id, opt.id)"
+                      (change)="toggleMultiple(q.id, opt.id)"
+                    />
+                    <span class="option-text">{{ opt.text }}</span>
+                  </label>
+                }
+              </div>
+            }
+
+            @if (q.type === 'scale') {
+              <div class="scale-wrap">
+                <div class="scale-labels">
+                  <span>{{ q.scale?.minLabel }}</span>
+                  <span>{{ q.scale?.maxLabel }}</span>
+                </div>
+                <div class="scale-options">
+                  @for (val of getScaleRange(q); track val) {
+                    <button
+                      class="scale-btn"
+                      [class.active]="getAnswer(q.id) === val"
+                      (click)="setAnswer(q.id, val)"
+                    >{{ val }}</button>
+                  }
+                </div>
+                <div class="scale-numbers">
+                  @for (val of getScaleRange(q); track val) {
+                    <span>{{ scaleLabel(val) }}</span>
+                  }
+                </div>
+              </div>
+            }
+
+            @if (q.type === 'text') {
+              <input
+                type="text"
+                class="text-answer"
+                placeholder="Escribe tu respuesta aquí..."
+                [value]="getAnswer(q.id)"
+                (input)="setAnswer(q.id, $any($event.target).value)"
+              />
+            }
+          </div>
+        }
+
+        <div class="nav-buttons">
+          <button class="btn-secondary" (click)="prev()" [disabled]="currentStep() === 0">
+            ← Anterior
+          </button>
+
+          @if (!isLastQuestion()) {
+            <button class="btn-primary" (click)="next()" [disabled]="!canProceed()">
+              Siguiente →
+            </button>
+          } @else {
+            <button class="btn-submit" (click)="submit()" [disabled]="!canProceed() || submitting()">
+              Enviar respuestas ✓
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>

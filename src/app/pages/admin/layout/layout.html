@@ -1,0 +1,35 @@
+<div class="admin-layout">
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <span class="brand-icon">🎓</span>
+      <div>
+        <span class="brand-name">TdeA Encuestas</span>
+        <span class="brand-sub">Panel Admin</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="nav-item active">
+        <span>📊</span> Dashboard
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <span class="user-avatar">👤</span>
+        <div>
+          <p class="user-name">{{ auth.currentUser()?.nombre }}</p>
+          <p class="user-email">{{ auth.currentUser()?.email }}</p>
+        </div>
+      </div>
+      <div class="sidebar-actions">
+        <button class="btn-link" (click)="goToSurvey()">Ver encuesta →</button>
+        <button class="btn-logout" (click)="logout()">Cerrar sesión</button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <router-outlet />
+  </main>
+</div>

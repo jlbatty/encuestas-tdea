@@ -1,0 +1,76 @@
+<div class="dashboard">
+  @if (loading()) {
+    <div class="dash-loading">
+      <div class="loading-spinner"></div>
+      <p>Cargando estadísticas...</p>
+    </div>
+  } @else if (error()) {
+    <div class="dash-error">⚠️ {{ error() }}</div>
+  } @else if (ready()) {
+
+    <div class="page-header">
+      <div>
+        <h1>Dashboard</h1>
+        <p>{{ surveyTitle() }}</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn-export" (click)="exportExcel()" [disabled]="exporting()">
+          {{ exporting() ? 'Generando...' : '⬇ Descargar Excel' }}
+        </button>
+        <span class="badge-active">● Encuesta activa</span>
+      </div>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="stat-grid">
+      @for (card of statCards(); track card.label) {
+        <div class="stat-card" [style.--accent]="card.color">
+          <div class="stat-icon">{{ card.icon }}</div>
+          <div class="stat-body">
+            <p class="stat-value">{{ card.value }}</p>
+            <p class="stat-label">{{ card.label }}</p>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Charts -->
+    <div class="charts-grid">
+      <div class="chart-card wide">
+        <h3>Respuestas en los últimos 14 días</h3>
+        <canvas #lineChart></canvas>
+      </div>
+
+      <div class="chart-card">
+        <h3>Distribución por sexo</h3>
+        <canvas #sexoChart></canvas>
+      </div>
+
+      <div class="chart-card">
+        <h3>Distribución por zona</h3>
+        <canvas #zonaChart></canvas>
+      </div>
+
+      <div class="chart-card">
+        <h3>¿Usan herramientas de IA?</h3>
+        <canvas #iaUsageChart></canvas>
+      </div>
+
+      <div class="chart-card">
+        <h3>Horas de uso diario (académico vs. personal)</h3>
+        <canvas #horasChart></canvas>
+      </div>
+
+      <div class="chart-card wide">
+        <h3>Frecuencia promedio de uso de IA por actividad académica (escala 1–5)</h3>
+        <canvas #frecChart></canvas>
+      </div>
+
+      <div class="chart-card wide">
+        <h3>Tipo de uso de IA en actividades escolares — cantidad que responde "Sí"</h3>
+        <canvas #tipoUsoChart></canvas>
+      </div>
+    </div>
+
+  }
+</div>
