@@ -2,6 +2,34 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.9.
 
+Frontend en **Angular** + backend en **Firebase Functions** (Firestore como base de datos).
+
+## Configuración inicial (credenciales de Firebase)
+
+> ⚠️ **La clave de cuenta de servicio del Admin SDK NO se incluye en el repositorio** por seguridad (está ignorada en `.gitignore` mediante la regla `*-adminsdk-*.json`). Esa clave da acceso administrativo total al proyecto Firebase, por lo que cada desarrollador debe generar la suya.
+
+Algunos scripts de backend (`functions/src/seed.ts` y `functions/src/seed-admin.ts`) requieren esta clave para conectarse a Firestore con privilegios de administrador. Para configurarla:
+
+1. Entra a la [Firebase Console](https://console.firebase.google.com/) → ⚙️ **Configuración del proyecto** → pestaña **Cuentas de servicio**.
+2. Pulsa **Generar nueva clave privada** y descarga el archivo `.json`.
+3. Colócalo dentro de la carpeta `functions/` con el nombre exacto que esperan los scripts:
+
+   ```
+   functions/encuestatdea-baeff-firebase-adminsdk-fbsvc-11c5af7468.json
+   ```
+
+   > El nombre del archivo está referenciado de forma fija en los imports de los scripts seed. Si usas otro nombre, actualiza esos imports.
+
+4. Verifica que el archivo queda ignorado por git:
+
+   ```bash
+   git check-ignore functions/encuestatdea-baeff-firebase-adminsdk-fbsvc-11c5af7468.json
+   ```
+
+   Si la ruta aparece en la salida, está correctamente ignorada y **nunca** se subirá al repositorio.
+
+En producción (Firebase Functions desplegadas) **no hace falta este archivo**: las credenciales las inyecta Firebase automáticamente.
+
 ## Development server
 
 To start a local development server, run:
